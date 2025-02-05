@@ -3,10 +3,10 @@ name: Yocto Build Pipeline
 on:
   push:
     branches:
-      - main
+      - scarthgap
   pull_request:
     branches:
-      - main
+      - scarthgap
 
 jobs:
   build:
