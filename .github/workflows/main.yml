@@ -20,14 +20,18 @@ jobs:
     # Step 2: Set up dependencies (install Docker, kas, etc.)
     - name: Set up Docker
       run: |
-        run: |
         sudo apt-get update
-        # Remove conflicting packages (containerd)
-        sudo apt-get remove -y containerd
-        # Install Docker and containerd.io
+        # Clean up any held or broken packages
+        sudo apt-get autoremove -y
+        sudo apt-get clean
+        sudo apt-get install -f # Fix any broken dependencies
+        # Unhold any held packages
+        sudo apt-mark unhold containerd
+        # Install docker and containerd.io
         sudo apt-get install -y docker.io containerd.io
         sudo usermod -aG docker $USER
         newgrp docker
+
 
     - name: Install kas
       run: |
