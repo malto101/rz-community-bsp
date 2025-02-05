@@ -38,7 +38,7 @@ jobs:
 
     # Step 4: Save the output file as an artifact
     - name: Upload Build Output as Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: yocto-build-output
         path: path/to/output/file  # Adjust this path to the actual output file location
