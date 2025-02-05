@@ -1,0 +1,44 @@
+name: Yocto Build Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up dependencies (install Docker, kas, etc.)
+    - name: Set up Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+        sudo usermod -aG docker $USER
+        newgrp docker
+
+    - name: Install kas
+      run: |
+        sudo apt-get install -y python3-pip
+        pip3 install kas
+
+    # Step 3: Build the Yocto image
+    - name: Build Yocto Image
+      run: |
+        cd rz-community-bsp
+        ./kas-container build kas/yocto/kirkstone.yml:kas/opt/debug.yml:kas/image/renesas-image-minimal.yml
+
+    # Step 4: Save the output file as an artifact
+    - name: Upload Build Output as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: yocto-build-output
+        path: path/to/output/file  # Adjust this path to the actual output file location
